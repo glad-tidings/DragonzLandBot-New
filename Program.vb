@@ -100,20 +100,24 @@ Get_Error:
                             If taskList IsNot Nothing Then
                                 For Each task In taskList.Where(Function(x) x.Active = True And x.Recurrence = "daily")
                                     If task.LevelRecord IsNot Nothing Then
-                                        If task.LevelRecord.AttemptedAt.HasValue Then
-                                            If task.LevelRecord.AttemptedAt.Value.ToLocalTime.AddDays(1) > Date.Now Then Continue For
-                                        End If
-
-                                        Dim claimTask = Await Bot.DragonzLandTasksVerify(task.Id)
-                                        If claimTask Then
-                                            Log.Show("DragonzLand", Query.Name, $"task '{task.Title}' completed", ConsoleColor.Green)
+                                        If task.LevelRecord.ActiveAt.HasValue Then
+                                            If task.LevelRecord.ActiveAt.Value.ToLocalTime > Date.Now Then Continue For
                                         Else
-                                            Log.Show("DragonzLand", Query.Name, $"task '{task.Title}' failed", ConsoleColor.Red)
+                                            If task.LevelRecord.AttemptedAt.HasValue Then
+                                                If task.LevelRecord.AttemptedAt.Value.ToLocalTime.AddDays(1) > Date.Now Then Continue For
+                                            End If
                                         End If
-
-                                        Dim eachtaskRND As Integer = RND.Next(Query.TaskSleep(0), Query.TaskSleep(1))
-                                        Thread.Sleep(eachtaskRND * 1000)
                                     End If
+
+                                    Dim claimTask = Await Bot.DragonzLandTasksVerify(task.Id)
+                                    If claimTask Then
+                                        Log.Show("DragonzLand", Query.Name, $"task '{task.Title}' completed", ConsoleColor.Green)
+                                    Else
+                                        Log.Show("DragonzLand", Query.Name, $"task '{task.Title}' failed", ConsoleColor.Red)
+                                    End If
+
+                                    Dim eachtaskRND As Integer = RND.Next(Query.TaskSleep(0), Query.TaskSleep(1))
+                                    Thread.Sleep(eachtaskRND * 1000)
                                 Next
                             End If
                         End If
