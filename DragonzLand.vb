@@ -34,6 +34,8 @@ End Class
 Public Class DragonzLandMeResponse
     <JsonPropertyName("id")>
     Public Property Id As String
+    <JsonPropertyName("guildId")>
+    Public Property GuildId As String
     <JsonPropertyName("telegramUserId")>
     Public Property TelegramUserId As Long
     <JsonPropertyName("username")>
@@ -288,4 +290,9 @@ End Class
 Public Class httpbin
     <JsonPropertyName("origin")>
     Public Property Origin As String
+End Class
+
+Public Class DragonzLandGuildRequest
+    <JsonPropertyName("guildId")>
+    Public Property GuildId As String
 End Class

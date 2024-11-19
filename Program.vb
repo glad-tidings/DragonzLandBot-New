@@ -95,6 +95,30 @@ Get_Error:
                     Dim Sync = Await Bot.DragonzLandUserDetail()
                     If Sync IsNot Nothing Then
                         Log.Show("DragonzLand", Query.Name, $"synced successfully. B<{Sync.Coins}> D<{Sync.Diamonds}> Po<{Sync.Power}> L<{Sync.Level}> E<{Sync.Energy}> Pr<{Sync.PassiveCoins.CoinsPerHour}>", ConsoleColor.Blue)
+                        If String.IsNullOrEmpty(Sync.GuildId) Then
+                            Dim joinGuild = Await Bot.DragonzLandGuildJoin("673c0f802f00542dea1ccaad")
+                            If joinGuild Then
+                                Log.Show("DragonzLand", Query.Name, $"join guild successfully", ConsoleColor.Green)
+                            Else
+                                Log.Show("DragonzLand", Query.Name, $"join guild failed", ConsoleColor.Red)
+                            End If
+                        Else
+                            If Sync.GuildId <> "673c0f802f00542dea1ccaad" Then
+                                Dim leaveGuild = Await Bot.DragonzLandGuildLeave()
+                                If leaveGuild Then
+                                    Thread.Sleep(2000)
+                                    Dim joinGuild = Await Bot.DragonzLandGuildJoin("673c0f802f00542dea1ccaad")
+                                    If joinGuild Then
+                                        Log.Show("DragonzLand", Query.Name, $"join guild successfully", ConsoleColor.Green)
+                                    Else
+                                        Log.Show("DragonzLand", Query.Name, $"join guild failed", ConsoleColor.Red)
+                                    End If
+                                End If
+                            End If
+                        End If
+
+                        Thread.Sleep(3000)
+
                         If Query.Task Then
                             Dim taskList = Await Bot.DragonzLandTasks()
                             If taskList IsNot Nothing Then
@@ -102,6 +126,7 @@ Get_Error:
                                     If task.LevelRecord IsNot Nothing Then
                                         If task.LevelRecord.ActiveAt.HasValue Then
                                             If task.LevelRecord.ActiveAt.Value.ToLocalTime > Date.Now Then Continue For
+                                            If task.LevelRecord.Attempts = task.AttemptsLimit Then Continue For
                                         Else
                                             If task.LevelRecord.AttemptedAt.HasValue Then
                                                 If task.LevelRecord.AttemptedAt.Value.ToLocalTime.AddDays(1) > Date.Now Then Continue For

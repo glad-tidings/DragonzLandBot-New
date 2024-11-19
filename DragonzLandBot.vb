@@ -328,4 +328,27 @@ Public Class DragonzLandBot
         End If
     End Function
 
+    Public Async Function DragonzLandGuildJoin(guildId As String) As Task(Of Boolean)
+        Dim DLAPI As New DragonzLandApi(1, AccessToken, PubQuery.Index, PubProxy)
+        Dim request As New DragonzLandGuildRequest With {.GuildId = guildId}
+        Dim serializedRequest = JsonSerializer.Serialize(request)
+        Dim serializedRequestContent = New StringContent(serializedRequest, Encoding.UTF8, "application/json")
+        Dim httpResponse = Await DLAPI.DLAPIPost("https://bot.dragonz.land/api/me/guild/join", serializedRequestContent)
+        If httpResponse IsNot Nothing Then
+            Return httpResponse.IsSuccessStatusCode
+        Else
+            Return False
+        End If
+    End Function
+
+    Public Async Function DragonzLandGuildLeave() As Task(Of Boolean)
+        Dim DLAPI As New DragonzLandApi(1, AccessToken, PubQuery.Index, PubProxy)
+        Dim httpResponse = Await DLAPI.DLAPIPost("https://bot.dragonz.land/api/me/guild/leave", Nothing)
+        If httpResponse IsNot Nothing Then
+            Return httpResponse.IsSuccessStatusCode
+        Else
+            Return False
+        End If
+    End Function
+
 End Class
