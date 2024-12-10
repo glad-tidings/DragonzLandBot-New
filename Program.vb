@@ -26,15 +26,15 @@ mainMenu:
         Dim jsonConfig As String = ""
         Dim jsonProxy As String = ""
         Try
-            jsonConfig = File.ReadAllText("Config.json")
+            jsonConfig = File.ReadAllText("data.txt")
         Catch ex As Exception
-            Console.WriteLine("file 'Config.json' not found")
+            Console.WriteLine("file 'data.txt' not found")
             GoTo Get_Error
         End Try
         Try
-            jsonProxy = File.ReadAllText("Proxy.json")
+            jsonProxy = File.ReadAllText("proxy.txt")
         Catch ex As Exception
-            Console.WriteLine("file 'Proxy.json' not found")
+            Console.WriteLine("file 'proxy.txt' not found")
             GoTo Get_Error
         End Try
         Try
@@ -48,7 +48,7 @@ mainMenu:
         If Not String.IsNullOrEmpty(opt) Then
             Select Case opt
                 Case "1"
-                    Dim Cats As New Thread(
+                    Dim DragonzLand As New Thread(
                         Sub()
                             For Each Query In queries.Where(Function(x) x.Active)
                                 Dim BotThread As New Thread(Sub() DragonzLandThread(Query))
@@ -57,7 +57,7 @@ mainMenu:
                                 Thread.Sleep(120000)
                             Next
                         End Sub)
-                    Cats.Start()
+                    DragonzLand.Start()
                 Case "2"
                     For Each Query In queries
                         If Not File.Exists($"sessions\{Query.Name}.session") Then
