@@ -17,7 +17,7 @@ Public Class DragonzLandBot
         PubQuery = Query
         PubProxy = Proxy
         IPAddress = GetIP().Result
-        PubQuery.Auth = getSession().Result
+        PubQuery.Auth = GetSession().Result
         Dim GetToken = DragonzLandGetToken().Result
         If GetToken IsNot Nothing Then
             AccessToken = GetToken.AccessToken
@@ -32,7 +32,7 @@ Public Class DragonzLandBot
     Private Async Function GetIP() As Task(Of String)
         Dim client As HttpClient
         Dim FProxy = PubProxy.Where(Function(x) x.Index = PubQuery.Index)
-        If FProxy.Count <> 0 Then
+        If FProxy.Any() Then
             If FProxy(0).Proxy <> "" Then
                 Dim handler = New HttpClientHandler With {.Proxy = New WebProxy With {.Address = New Uri(FProxy(0).Proxy)}}
                 client = New HttpClient(handler) With {.Timeout = New TimeSpan(0, 0, 30)}
@@ -60,8 +60,8 @@ Public Class DragonzLandBot
         End If
     End Function
 
-    Private Async Function getSession() As Task(Of String)
-        Dim vw As TelegramMiniApp.WebView = New TelegramMiniApp.WebView(PubQuery.API_ID, PubQuery.API_HASH, PubQuery.Name, PubQuery.Phone, "dragonz_land_bot", "https://bot.dragonz.land/")
+    Private Async Function GetSession() As Task(Of String)
+        Dim vw As New TelegramMiniApp.WebView(PubQuery.API_ID, PubQuery.API_HASH, PubQuery.Name, PubQuery.Phone, "dragonz_land_bot", "https://bot.dragonz.land/")
         Dim url As String = Await vw.Get_URL()
         If url <> "" Then
             Return url.Split(New String() {"tgWebAppData="}, StringSplitOptions.None)(1).Split(New String() {"&tgWebAppVersion"}, StringSplitOptions.None)(0)
@@ -325,6 +325,22 @@ Public Class DragonzLandBot
             Return httpResponse.IsSuccessStatusCode
         Else
             Return False
+        End If
+    End Function
+
+    Public Async Function DragonzLandGuild() As Task(Of DragonzLandGuildResponse)
+        Dim DLAPI As New DragonzLandApi(1, AccessToken, PubQuery.Index, PubProxy)
+        Dim httpResponse = Await DLAPI.DLAPIGet("https://bot.dragonz.land/api/guilds/gtbums/by-username")
+        If httpResponse IsNot Nothing Then
+            If httpResponse.IsSuccessStatusCode Then
+                Dim responseStream = Await httpResponse.Content.ReadAsStreamAsync()
+                Dim responseJson = Await JsonSerializer.DeserializeAsync(Of DragonzLandGuildResponse)(responseStream)
+                Return responseJson
+            Else
+                Return Nothing
+            End If
+        Else
+            Return Nothing
         End If
     End Function
 

@@ -73,19 +73,6 @@ Public Class DragonzLandMePassive
     Public Property CoinsPerHour As Integer
 End Class
 
-'Public Class DragonzLandMeTask
-'    <JsonPropertyName("taskId")>
-'    Public Property TaskId As String
-'    <JsonPropertyName("level")>
-'    Public Property Level As Integer
-'    <JsonPropertyName("attempts")>
-'    Public Property Attempts As Integer
-'    <JsonPropertyName("attemptedAt")>
-'    Public Property AttemptedAt As DateTime?
-'    <JsonPropertyName("activeAt")>
-'    Public Property ActiveAt As DateTime?
-'End Class
-
 Public Class DragonzLandMeBoost
     <JsonPropertyName("boostId")>
     Public Property BoostId As String
@@ -282,6 +269,26 @@ Public Class DragonzLandCardBuyRequest
     Public Property CardId As String
 End Class
 
+Public Class DragonzLandGuildRequest
+    <JsonPropertyName("guildId")>
+    Public Property GuildId As String
+End Class
+
+Public Class DragonzLandGuildResponse
+    <JsonPropertyName("id")>
+    Public Property Id As String
+    <JsonPropertyName("username")>
+    Public Property Username As String
+    <JsonPropertyName("title")>
+    Public Property Title As String
+    <JsonPropertyName("coins")>
+    Public Property Coins As Long
+    <JsonPropertyName("power")>
+    Public Property Power As Integer
+    <JsonPropertyName("members")>
+    Public Property Members As Integer
+End Class
+
 Public Class Proxy
     Public Property Index As Integer
     Public Property Proxy As String
@@ -290,9 +297,4 @@ End Class
 Public Class httpbin
     <JsonPropertyName("origin")>
     Public Property Origin As String
-End Class
-
-Public Class DragonzLandGuildRequest
-    <JsonPropertyName("guildId")>
-    Public Property GuildId As String
 End Class
